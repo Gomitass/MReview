@@ -23,7 +23,9 @@ import android.graphics.drawable.PictureDrawable
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.VectorDrawable
+import android.opengl.Visibility
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import com.davilav.wigilabstest.R
@@ -54,7 +56,7 @@ class MovieActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        setTitle("Last Movies Added");
+        title = "Last Movies Added";
         navView.setNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.nav_home -> Toast.makeText(this,it.title,Toast.LENGTH_SHORT).show()
