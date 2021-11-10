@@ -7,4 +7,6 @@
     <string name="exit_button">Exit</string>
     <string name="spanish">es-Es</string>
     <string name="english">en-US</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
 </resources>

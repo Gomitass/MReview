@@ -23,8 +23,12 @@ import android.graphics.drawable.PictureDrawable
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.VectorDrawable
+import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.drawerlayout.widget.DrawerLayout
 import com.davilav.wigilabstest.R
 import com.davilav.wigilabstest.utils.RoundCornersBitmap
+import com.google.android.material.navigation.NavigationView
 
 
 class MovieActivity : AppCompatActivity() {
@@ -35,6 +39,8 @@ class MovieActivity : AppCompatActivity() {
     private val viewModel: MovieViewModel by viewModel()
     private var movies: MovieModel? = null
     private var dataList: List<MovieModel> = listOf()
+    private lateinit var toggle : ActionBarDrawerToggle
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMovieBinding.inflate(layoutInflater)
@@ -42,10 +48,35 @@ class MovieActivity : AppCompatActivity() {
         intent?.let {
             movies = it.getSerializableExtra(MOVIE_KEY) as MovieModel?
         }
+        val navView: NavigationView = binding.navView
+        val drawerLayout:DrawerLayout = binding.drawerLayout
+        toggle= ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setTitle("Last Movies Added");
+        navView.setNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.nav_home -> Toast.makeText(this,it.title,Toast.LENGTH_SHORT).show()
+                R.id.nav_films_last -> Toast.makeText(this,it.title,Toast.LENGTH_SHORT).show()
+                R.id.nav_log_out-> Toast.makeText(this,it.title,Toast.LENGTH_SHORT).show()
+                R.id.nav_share -> Toast.makeText(this,it.title,Toast.LENGTH_SHORT).show()
+                R.id.nav_rate_us -> Toast.makeText(this,it.title,Toast.LENGTH_SHORT).show()
+            }
+            true
+        }
+
         viewModel.getMovie(binding.button.text as String, this)
         setupRecyclerView(true)
         setUpClickListener()
         setUpObserver()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(toggle.onOptionsItemSelected(item)){
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setupRecyclerView(hasConnection:Boolean) {
