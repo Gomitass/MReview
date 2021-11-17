@@ -3,7 +3,7 @@ package com.davilav.wigilabstest.utils
 class ListImpl(var head:Node? = null,var tail:Node? = null):List{
 
     override fun pushFront(key:Any){
-        val node:Node = Node(key)
+        val node = Node(key)
         node.next = head
         head = node
         if (tail == null){
@@ -27,7 +27,7 @@ class ListImpl(var head:Node? = null,var tail:Node? = null):List{
         }
     }
     override fun append(key:Any?){
-        val node:Node = Node(key)
+        val node = Node(key)
         node.next = null
         if (tail == null){
             tail = node
@@ -85,7 +85,7 @@ class ListImpl(var head:Node? = null,var tail:Node? = null):List{
             b = "[" + head?.key
             var a = head
             while (a?.next != null){
-                a = a?.next
+                a = a.next
                 b =b + "," + a?.key
             }
             b += "]"
@@ -98,10 +98,10 @@ class ListImpl(var head:Node? = null,var tail:Node? = null):List{
     }
 
     override fun size(): Int {
-        var i = 1
+        var i = 0
         var a = head
         while (a != null){
-            a= head?.next
+            a = a.next
             i += 1
         }
         return i
