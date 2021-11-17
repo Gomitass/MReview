@@ -2,12 +2,29 @@ package com.davilav.wigilabstest.utils
 
 class ArrayImpl(var data: ArrayList<Any?> = ArrayList<Any?>()):List{
 
+
     override fun pushFront(key:Any){
         data.add(0,key)
     }
     override fun topFront():Any?{
         return data[0]
     }
+
+    fun get(i:Int): Any? {
+        return data[i]
+    }
+
+    fun clear(){
+        data = ArrayList<Any?>()
+    }
+
+    fun toArray(list:MutableList<Any>): ArrayImpl {
+        for (i in list){
+            data.add(i)
+        }
+        return this
+    }
+
     override fun popFront():Any?{
         if (isEmpty()){
             throw Exception("ERROR:The list is empty")

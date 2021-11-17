@@ -36,6 +36,7 @@ class Utils {
             movie.poster_path,
             Converters().stringToBitMap(movie.poster_img),
             movie.release_date,
+            false,
             movie.title,
             movie.video,
             movie.vote_average,

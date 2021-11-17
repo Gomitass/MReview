@@ -50,6 +50,15 @@ class MovieActivity : AppCompatActivity() {
         intent?.let {
             movies = it.getSerializableExtra(MOVIE_KEY) as MovieModel?
         }
+        setupNavView()
+        viewModel.getMovie(binding.button.text as String, this)
+        setupRecyclerView(true)
+        setUpClickListener()
+        setUpObserver()
+
+    }
+
+    private fun setupNavView(){
         val navView: NavigationView = binding.navView
         val drawerLayout:DrawerLayout = binding.drawerLayout
         toggle= ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close)
@@ -68,10 +77,6 @@ class MovieActivity : AppCompatActivity() {
             true
         }
 
-        viewModel.getMovie(binding.button.text as String, this)
-        setupRecyclerView(true)
-        setUpClickListener()
-        setUpObserver()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

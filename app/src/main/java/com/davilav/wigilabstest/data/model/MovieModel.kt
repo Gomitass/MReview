@@ -15,6 +15,7 @@ data class MovieModel(
     var poster_path: String?,
     var poster_img: Bitmap?,
     val release_date: String?,
+    val favorite: Boolean,
     val title: String?,
     val video: Boolean?,
     val vote_average: Double?,

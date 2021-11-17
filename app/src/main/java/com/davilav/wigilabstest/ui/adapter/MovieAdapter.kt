@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.davilav.wigilabstest.data.model.MovieModel
 import com.davilav.wigilabstest.databinding.FilmLayoutBinding
 import com.davilav.wigilabstest.ui.movie.MovieViewModel
+import com.davilav.wigilabstest.utils.ArrayImpl
 
 
 class MovieAdapter(
@@ -20,7 +21,7 @@ class MovieAdapter(
 ) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
     private lateinit var mContext: Context
-    private var filterResults: MutableList<MovieModel> = items.toMutableList()
+    private var filterResults: ArrayImpl = ArrayImpl().toArray(items.toMutableList()) as ArrayImpl
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         mContext = parent.context
@@ -30,15 +31,15 @@ class MovieAdapter(
 
     fun updateData(data: List<MovieModel>) {
         filterResults.clear()
-        filterResults.addAll(data)
+        filterResults.toArray(data.toMutableList())
         notifyDataSetChanged()
     }
 
 
 
-    override fun getItemCount(): Int = filterResults.size
+    override fun getItemCount(): Int = filterResults.size()
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bindData(filterResults[position], listenerDetail,listenerDownload,hasConnection)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bindData(filterResults.get(position) as MovieModel, listenerDetail,listenerDownload,hasConnection)
 
     class ViewHolder(private val context: Context, private val binding: FilmLayoutBinding, val viewModel: MovieViewModel) : RecyclerView.ViewHolder(binding.root) {
 
