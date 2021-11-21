@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.davilav.wigilabstest.data.Result
 import com.davilav.wigilabstest.data.local.db.LocalDataBase
+import com.davilav.wigilabstest.data.local.db.languages.Language
 import com.davilav.wigilabstest.data.local.db.movie.Movie
 import com.davilav.wigilabstest.data.model.ErrorResponse
 import com.davilav.wigilabstest.data.model.MovieModel
@@ -32,6 +33,25 @@ class MovieRepositoryImpl(
         }
     }
 
+    override suspend fun getLanguages(): Result<Any> {
+        val data = database.getLanguageDao().getLanguage()
+        return if(data.isNotEmpty()){
+            Result.success(data)
+        } else {
+            Result.error("Data empty")
+        }
+    }
+
+    override suspend fun insertLanguages(language: Language){
+        database.getLanguageDao().insertLanguage(language)
+    }
+
+    override suspend fun deleteLanguages(language: String) {
+        database.getLanguageDao().deleteLanguage(language)
+    }
+
+
+
     override suspend fun compareMovies(movie: Movie) {
         val data = database.getMovieDao().getMovie()
         if (data.isEmpty() || !data.contains(movie)) {
@@ -41,6 +61,10 @@ class MovieRepositoryImpl(
 
     override suspend fun insertMovies(movie: Movie) {
         database.getMovieDao().insertMovie(movie)
+    }
+
+    override suspend fun nukeLanguages() {
+        database.getLanguageDao().nuke()
     }
 
     override suspend fun getMoviesPhotos(movies: List<MovieModel>?): Result<Any> {

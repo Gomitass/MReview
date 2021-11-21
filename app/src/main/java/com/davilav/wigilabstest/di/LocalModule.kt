@@ -17,10 +17,18 @@ val localModule = module {
 }
 
 private const val DATABASE_NAME = Constants.DATABASE_NAME
+
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL(
             "CREATE TABLE IF NOT EXISTS Movie(movie_id INTEGER PRIMARY KEY NOT NULL, original_title TEXT, overview TEXT, popularity REAL, poster_path TEXT, release_date TEXT, title TEXT, vote_average REAL, vote_count INTEGER, adult INTEGER, backdrop_path TEXT, original_language TEXT, video INTEGER, poster_img TEXT)"
+        )
+    }
+}
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS Language(id INTEGER PRIMARY KEY NOT NULL, language TEXT)"
         )
     }
 }
@@ -30,5 +38,6 @@ fun provideRoom(application: Application): LocalDataBase = Room.databaseBuilder(
     LocalDataBase::class.java,
     DATABASE_NAME
 ).addMigrations(
-    MIGRATION_1_2
+    MIGRATION_1_2,
+    MIGRATION_2_3
 ).build()

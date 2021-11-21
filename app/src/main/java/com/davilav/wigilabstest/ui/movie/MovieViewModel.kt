@@ -9,18 +9,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davilav.wigilabstest.data.remote.calladapter.NetworkResponse
 import com.davilav.wigilabstest.data.repository.movie.MovieRepository
-import com.davilav.wigilabstest.utils.Constants
-import com.davilav.wigilabstest.utils.SingleLiveEvent
-import com.davilav.wigilabstest.utils.Singleton
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import android.os.AsyncTask
+import com.davilav.wigilabstest.data.local.db.languages.Language
 import com.davilav.wigilabstest.data.local.db.movie.Movie
 import kotlinx.coroutines.Dispatchers
 import com.davilav.wigilabstest.data.model.MovieModel
-import com.davilav.wigilabstest.utils.RoundCornersBitmap
+import com.davilav.wigilabstest.utils.*
 
 
 class MovieViewModel(
@@ -29,6 +27,8 @@ class MovieViewModel(
 
     private val _dataResponseOnline: MutableLiveData<Pair<Boolean, Any?>> = MutableLiveData()
     val dataResponseOnline: LiveData<Pair<Boolean, Any?>> get() = _dataResponseOnline
+    private val _dataResponseLanguages: MutableLiveData<Pair<Boolean, Any?>> = MutableLiveData()
+    val dataResponseLanguages: LiveData<Pair<Boolean, Any?>> get() = _dataResponseLanguages
     private val _dataResponseOffline: MutableLiveData<Pair<Boolean, Any?>> = MutableLiveData()
     val dataResponseOffline: LiveData<Pair<Boolean, Any?>> get() = _dataResponseOffline
     private val _dataResponse: SingleLiveEvent<MovieState> = SingleLiveEvent()
@@ -94,6 +94,44 @@ class MovieViewModel(
                 }
                 Result.Status.ERROR -> {
                     _dataResponseOffline.value = Pair(false, "Error")
+                }
+            }
+        }
+    }
+
+    fun insertLanguages(id:Int,language: String) {
+        viewModelScope.launch {
+            val lan = Language(0,language=language)
+            val response = repository.insertLanguages(lan)
+        }
+    }
+
+    fun deleteLanguages(language: String) {
+        viewModelScope.launch {
+            val response = repository.deleteLanguages(language)
+        }
+    }
+
+    fun nukeLanguages() {
+        viewModelScope.launch {
+            val response = repository.nukeLanguages()
+        }
+    }
+
+    fun getLanguages() {
+        viewModelScope.launch {
+            val response = repository.getLanguages()
+            when (response.status) {
+                Result.Status.SUCCESS -> {
+                    var queue = QueueImpl()
+                    val x = response.data as List<Language>
+                    for (i in x.indices){
+                        queue.enqueue(x[x.size-i-1])
+                    }
+                    _dataResponseLanguages.value = Pair(true, queue)
+                }
+                Result.Status.ERROR -> {
+                    _dataResponseLanguages.value = Pair(false, response.data)
                 }
             }
         }

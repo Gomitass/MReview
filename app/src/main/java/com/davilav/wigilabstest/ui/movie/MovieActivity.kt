@@ -29,6 +29,9 @@ import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
 import com.davilav.wigilabstest.R
+import com.davilav.wigilabstest.data.local.db.languages.Language
+import com.davilav.wigilabstest.data.model.LanguageModel
+import com.davilav.wigilabstest.utils.QueueImpl
 import com.davilav.wigilabstest.utils.RoundCornersBitmap
 import com.google.android.material.navigation.NavigationView
 
@@ -42,6 +45,7 @@ class MovieActivity : AppCompatActivity() {
     private var movies: MovieModel? = null
     private var dataList: List<MovieModel> = listOf()
     private lateinit var toggle : ActionBarDrawerToggle
+    private var queue = QueueImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +55,7 @@ class MovieActivity : AppCompatActivity() {
             movies = it.getSerializableExtra(MOVIE_KEY) as MovieModel?
         }
         setupNavView()
-        viewModel.getMovie(binding.button.text as String, this)
+        viewModel.getLanguages()
         setupRecyclerView(true)
         setUpClickListener()
         setUpObserver()
@@ -112,6 +116,36 @@ class MovieActivity : AppCompatActivity() {
             }
         })
 
+        viewModel.dataResponseLanguages.observe(this, { response ->
+            when (response.first) {
+                true ->{
+                    val y = response.second as QueueImpl
+                    val x = y.head!!.key as LanguageModel
+                    val z = queue
+                    if (x.language.toString() == "en-US") {
+                        if (!queue.isEmpty()){
+                            queue.dequeue()
+                        }
+                        queue.enqueue(resources.getString(R.string.english))
+                        queue.enqueue(resources.getString(R.string.spanish))
+                    } else {
+                        if (!queue.isEmpty()){
+                            queue.dequeue()
+                        }
+                        queue.enqueue(resources.getString(R.string.spanish))
+                        queue.enqueue(resources.getString(R.string.english))
+                    }
+                    viewModel.getMovie(queue.head?.key.toString(), this)
+                    binding.button.text = queue.head?.key.toString()
+                }
+                false -> {
+                    viewModel.insertLanguages(0,binding.button.text.toString())
+                    viewModel.getMovie(binding.button.text.toString(), this)
+                }
+            }
+
+        })
+
         viewModel.dataResponseOffline.observe(this, { response ->
             when (response.first) {
                 true -> {
@@ -142,13 +176,13 @@ class MovieActivity : AppCompatActivity() {
 
     private fun setUpClickListener() {
         binding.button.setOnClickListener {
-            switchLanguage(binding.button.text as String)
-            viewModel.getMovie(binding.button.text as String, this)
-        }
-
-        binding.button.setOnClickListener {
-            switchLanguage(binding.button.text as String)
-            viewModel.getMovie(binding.button.text as String, this)
+            val x = queue.dequeue().toString()
+            val y = queue
+            switchLanguage(queue.head?.key.toString())
+            viewModel.getMovie(queue.head?.key.toString(), this)
+            viewModel.insertLanguages(0,queue.head?.key.toString())
+            viewModel.deleteLanguages(x)
+            viewModel.getLanguages()
         }
     }
 
