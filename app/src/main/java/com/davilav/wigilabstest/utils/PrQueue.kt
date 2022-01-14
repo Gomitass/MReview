@@ -1,3 +1,4 @@
+package com.davilav.wigilabstest.utils
 import kotlin.random.Random
 
 interface Priority{
@@ -104,4 +105,4 @@ class InPriority(): Priority{
 //        print("\n")
 //        queue.print()
 //    }
-//} 
+//}
