@@ -1,3 +1,5 @@
+package com.davilav.wigilabstest.utils
+
 class DynArray (var data: Array<Any?> = Array<Any?>(10){null}, var size: Int = 0){
 
     fun isEmpty(): Boolean{
@@ -28,4 +30,4 @@ class DynArray (var data: Array<Any?> = Array<Any?>(10){null}, var size: Int = 0
     fun set(d: Any?, index: Int){
         data[index] = d
     }
-} 
+}
