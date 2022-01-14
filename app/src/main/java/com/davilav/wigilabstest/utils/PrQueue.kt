@@ -87,20 +87,21 @@ class InPriority(): Priority{
     }
 
 }
-fun main(args: Array<String>){
-    var queue = PrQueue(InPriority())
-    for (i in 0..29){
-        queue.enQueue(Random.nextInt(0, 100))
-        queue.print()
-    }
-    print("\n")
-    print(" Se borran datos de la cola")
-    print("\n")
+// Main de prueba Cola de prioridad
+//fun main(args: Array<String>){
+//    var queue = PrQueue(InPriority())
+//    for (i in 0..29){
+//        queue.enQueue(Random.nextInt(0, 100))
+//        queue.print()
+//    }
+//    print("\n")
+//    print(" Se borran datos de la cola")
+//    print("\n")
 
-    while(!queue.isEmpty()){
-        var x = queue.deQueue()
-        print(x)
-        print("\n")
-        queue.print()
-    }
-}
+//    while(!queue.isEmpty()){
+//        var x = queue.deQueue()
+//        print(x)
+//        print("\n")
+//        queue.print()
+//    }
+//}
